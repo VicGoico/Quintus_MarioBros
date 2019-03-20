@@ -13,11 +13,18 @@
 <script src='lib/quintus_anim.js'></script>
 <script src='lib/quintus_tmx.js'></script>
 <script src='lib/quintus_audio.js'></script>
+<script src='game.js'></script>
 <style>
   canvas { background-color:black; }
 </style>
-<script src='practica3.js'></script>
 </head>
 <body>
+  <script>
+    var Q = Quintus()                          // Create a new engine instance
+              .include("Sprites, Scenes, Input, 2D, Touch, UI") // Load any needed modules
+              .setup()                           // Add a canvas element onto the page
+              .controls()                        // Add in default controls (keyboard, buttons)
+              .touch();                          // Add in touch support (for the UI)
+  </script>
 </body>
 </html>
