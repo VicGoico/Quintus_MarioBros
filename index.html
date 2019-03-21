@@ -1,30 +1,31 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>SuperMario</title>
-<script src='lib/quintus.js'></script>
-<script src='lib/quintus_sprites.js'></script>
-<script src='lib/quintus_scenes.js'></script>
-<script src='lib/quintus_2d.js'></script>
-<script src='lib/quintus_input.js'></script>
-<script src='lib/quintus_ui.js'></script>
-<script src='lib/quintus_touch.js'></script>
-<script src='lib/quintus_anim.js'></script>
-<script src='lib/quintus_tmx.js'></script>
-<script src='lib/quintus_audio.js'></script>
-<script src='game.js'></script>
-<style>
-  canvas { background-color:black; }
-</style>
+  <meta charset="UTF-8">
+  <title>SuperMario</title>
+  <script src='lib/quintus.js'></script>
+  <script src='lib/quintus_sprites.js'></script>
+  <script src='lib/quintus_scenes.js'></script>
+  <script src='lib/quintus_2d.js'></script>
+  <script src='lib/quintus_input.js'></script>
+  <script src='lib/quintus_ui.js'></script>
+  <script src='lib/quintus_touch.js'></script>
+  <script src='lib/quintus_anim.js'></script>
+  <script src='lib/quintus_tmx.js'></script>
+  <script src='lib/quintus_audio.js'></script>
+  <script src='game.js'></script>
+  <style>
+    canvas {
+      background-color: black;
+    }
+  </style>
 </head>
+
 <body>
-  <script>
-    var Q = Quintus()                          // Create a new engine instance
-              .include("Sprites, Scenes, Input, 2D, Touch, UI") // Load any needed modules
-              .setup()                           // Add a canvas element onto the page
-              .controls()                        // Add in default controls (keyboard, buttons)
-              .touch();                          // Add in touch support (for the UI)
+  <script type="text/javascript">
+    window.onload = game;
   </script>
 </body>
+
 </html>
