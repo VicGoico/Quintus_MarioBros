@@ -14,7 +14,7 @@ var game = function () {
             tilew: 32,
             tileh: 32
         });
-        
+
         //Sprite de Mario
         Q.compileSheets("mario_small.png", "mario_small.json");
         Q.Sprite.extend("Player", {
@@ -41,11 +41,27 @@ var game = function () {
         //Sprite de Goomba
         Q.compileSheets("goomba.png", "goomba.json");
         Q.Sprite.extend("Goomba", {
-            init: function(p){
+            init: function (p) {
                 this._super(p, {
                     sheet: "goomba",
-                    x: 100,
-                    y: 530
+                    x: 500,
+                    y: 530,
+                    vx: 100
+                });
+                this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
+                //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+                this.on("bump.left,bump.right,bump.bottom", function (collision) {
+                    if (collision.obj.isA("Player")) {
+                        Q.stageScene("endGame", 1, { label: "You Died" });
+                        collision.obj.destroy();
+                    }
+                });
+                //Si le salta encima el player lo mata y salta más
+                this.on("bump.top", function (collision) {
+                    if (collision.obj.isA("Player")) {
+                        this.destroy();
+                        collision.obj.p.vy = -300;
+                    }
                 });
             }
         });
