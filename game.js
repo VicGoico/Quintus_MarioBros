@@ -9,7 +9,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
 
-    Q.load("mario_small.png, mario_small.json, tiles.png", function () {
+    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json, tiles.png", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -39,10 +39,21 @@ var game = function () {
                 // hit.sprite is called everytime the player collides with a sprite
             }
         });
+        Q.compileSheets("goomba.png", "goomba.json");
+        Q.Sprite.extend("Goomba", {
+            init: function(p){
+                this._super(p, {
+                    sheet: "goomba",
+                    x: 100,
+                    y: 530
+                });
+            }
+        });
         Q.scene("level1", function (stage) {
             Q.stageTMX("level.tmx", stage);
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
+            stage.insert(new Q.Goomba());
         });
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("level1");
