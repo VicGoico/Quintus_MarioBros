@@ -17,7 +17,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
-    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json, tiles.png", function () {
+    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -42,9 +42,28 @@ var game = function () {
                 // default input actions (left, right to move, up or action to jump)
                 // It also checks to make sure the player is on a horizontal surface before
                 // letting them jump.
-                this.add('2d, platformerControls');
+                this.add('2d, platformerControls, tween');
+                //this.on("bump.bottom",this,"stomp");
                 // Write event handlers to respond hook into behaviors.
                 // hit.sprite is called everytime the player collides with a sprite
+            },
+            step: function (dt) {
+                if(this.p.y > 700){
+                    Q.stageScene("endGame", 1, { label: "You Died" });
+                    console.log("cayendo");
+                    this.p.x = 300;
+                    this.p.y = 500;
+                }
+                //Futura animacion de mario
+                /*
+                if (this.p.vx > 0) {
+                    this.play("run_right");
+                } else if (this.p.vx < 0) {
+                    this.play("run_left");
+                } else {
+                    this.play("stand_" + this.p.direction);
+                }*/
+
             }
             
 
@@ -76,17 +95,68 @@ var game = function () {
                 });
             }
         });
+
+        //
+        Q.compileSheets("bloopa.png", "bloopa.json");
+        Q.Sprite.extend("Bloopa", {
+            init: function (p) {
+                this._super(p, {
+                    sheet: "bloopa",
+                    x: 600,
+                    y: 400,
+                    vx: 30,
+                    frame: 0
+                });
+                this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
+                //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+                this.on("bump.left,bump.right,bump.bottom", function (collision) {
+                    if (collision.obj.isA("Player")) {
+                        Q.stageScene("endGame", 1, { label: "You Died" });
+                        collision.obj.destroy();
+                    }
+                });
+                //Si le salta encima el player lo mata y salta más
+                this.on("bump.top", function (collision) {
+                    if (collision.obj.isA("Player")) {
+                        this.destroy();
+                        // -300
+                        collision.obj.p.vy = -300;
+                    }
+                });
+            }
+        });
+
         //Se carga el nivel 1 tmx y se añaden los objetos
         Q.scene("level1", function (stage) {
             Q.stageTMX("level.tmx", stage);
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
+           // stage.insert(new Q.Goomba());
+          // stage.viewport.scale = 1.5;
+           // stage.insert(new Q.Goomba({x: 800}));
+            stage.insert(new Q.Bloopa());
+
             stage.insert(new Q.Goomba());
-            stage.viewport.scale = 1.5;
+            
             stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("level1");
         });
+        Q.scene('endGame',function(stage) {
+            var box = stage.insert(new Q.UI.Container({
+              x: Q.width/2, y: Q.height/2, fill: "rgba(1,0,0,0.5)"
+            }));
+            
+            var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
+                                                     label: "Play Again" }))         
+            var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, 
+                                                  label: stage.options.label }));
+            button.on("click",function() {
+              Q.clearStages();
+              Q.stageScene('level1');
+            });
+            box.fit(20);
+          });
     });
 }
