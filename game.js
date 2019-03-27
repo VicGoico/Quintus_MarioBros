@@ -71,6 +71,7 @@ var game = function () {
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
             stage.insert(new Q.Goomba());
+            stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("level1");
