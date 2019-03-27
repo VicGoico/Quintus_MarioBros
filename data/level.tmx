@@ -1716,7 +1716,7 @@
  </layer>
  <layer id="11" name="Objetos 1" width="63" height="27">
   <properties>
-   <property name="collision" type="bool" value="true"/>
+   <property name="collision" type="bool" value="false"/>
   </properties>
   <data>
    <tile/>
