@@ -42,9 +42,27 @@ var game = function () {
                 // default input actions (left, right to move, up or action to jump)
                 // It also checks to make sure the player is on a horizontal surface before
                 // letting them jump.
-                this.add('2d, platformerControls');
+                this.add('2d, platformerControls, tween');
+                //this.on("bump.bottom",this,"stomp");
                 // Write event handlers to respond hook into behaviors.
                 // hit.sprite is called everytime the player collides with a sprite
+            },
+            step: function (dt) {
+                if(this.p.y > 550){
+                    console.log("cayendo");
+                    this.p.x = 410;
+                    this.p.y = 90;
+                }
+                //Futura animacion de mario
+                /*
+                if (this.p.vx > 0) {
+                    this.play("run_right");
+                } else if (this.p.vx < 0) {
+                    this.play("run_left");
+                } else {
+                    this.play("stand_" + this.p.direction);
+                }*/
+
             }
             
 
