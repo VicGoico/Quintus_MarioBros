@@ -6,8 +6,8 @@ var game = function () {
         // Maximize this game to whatever the size of the browser is
         .setup({ 
             maximize: true,
-            //width: 320, // Set the default width to 320 pixels
-            //height: 480, // Set the default height to 480 pixels
+            width: 320, // Set the default width to 320 pixels
+            height: 480, // Set the default height to 480 pixels
             upsampleWidth: 420, // Double the pixel density of the
             upsampleHeight: 320, // game if the w or h is 420x320
             // or smaller (useful for retina phones)
@@ -31,9 +31,9 @@ var game = function () {
                 // You can call the parent's constructor with this._super(..)
                 this._super(p, {
                     sheet: "marioR", // Sprite que esta dentro de mario_small.json
-                    x: 410, //x donde aparecerá
-                    jumpSpeed: -700,
-                    y: 90 //y donde aparecerá
+                    x: 300, //x donde aparecerá
+                    jumpSpeed: -400,
+                    y: 500 //y donde aparecerá
                 });
                 // Add in pre-made components to get up and running quickly
                 // The `2d` component adds in default 2d collision detection
@@ -83,7 +83,7 @@ var game = function () {
             init: function (p) {
                 this._super(p, {
                     sheet: "bloopa",
-                    x: 700,
+                    x: 100,
                     y: 550,
                     vx: 30
                 });
@@ -100,7 +100,7 @@ var game = function () {
                     if (collision.obj.isA("Player")) {
                         this.destroy();
                         // -300
-                        collision.obj.p.vy = -400;
+                        collision.obj.p.vy = -300;
                     }
                 });
             }
@@ -112,9 +112,13 @@ var game = function () {
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
            // stage.insert(new Q.Goomba());
-            //stage.viewport.scale = 1.5;
+           stage.viewport.scale = 1.5;
            // stage.insert(new Q.Goomba({x: 800}));
             stage.insert(new Q.Bloopa());
+
+            //stage.insert(new Q.Goomba());
+            
+           // stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("level1");
