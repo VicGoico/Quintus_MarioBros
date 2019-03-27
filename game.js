@@ -4,10 +4,18 @@ var game = function () {
     var Q = window.Q = Quintus()
         .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX")
         // Maximize this game to whatever the size of the browser is
-        .setup({ maximize: true })
+        .setup({ 
+            maximize: true,
+            //width: 320, // Set the default width to 320 pixels
+            //height: 480, // Set the default height to 480 pixels
+            upsampleWidth: 420, // Double the pixel density of the
+            upsampleHeight: 320, // game if the w or h is 420x320
+            // or smaller (useful for retina phones)
+            downsampleWidth: 1024, // Halve the pixel density if resolution
+            downsampleHeight: 768 // is larger than or equal to 1024x768 
+        })
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
-
     //Se cargan los recursos
     Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json, tiles.png", function () {
         Q.sheet("tiles", "tiles.png", {
@@ -24,6 +32,7 @@ var game = function () {
                 this._super(p, {
                     sheet: "marioR", // Sprite que esta dentro de mario_small.json
                     x: 410, //x donde aparecerá
+                    jumpSpeed: -700,
                     y: 90 //y donde aparecerá
                 });
                 // Add in pre-made components to get up and running quickly
@@ -37,6 +46,8 @@ var game = function () {
                 // Write event handlers to respond hook into behaviors.
                 // hit.sprite is called everytime the player collides with a sprite
             }
+            
+
         });
         //Sprite de Goomba
         Q.compileSheets("goomba.png", "goomba.json");
@@ -71,6 +82,7 @@ var game = function () {
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
             stage.insert(new Q.Goomba());
+            //stage.viewport.scale = 1.5;
             stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
