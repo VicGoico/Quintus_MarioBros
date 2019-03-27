@@ -83,9 +83,10 @@ var game = function () {
             init: function (p) {
                 this._super(p, {
                     sheet: "bloopa",
-                    x: 100,
-                    y: 550,
-                    vx: 30
+                    x: 600,
+                    y: 400,
+                    vx: 30,
+                    frame: 0
                 });
                 this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
                 //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
@@ -112,7 +113,7 @@ var game = function () {
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
            // stage.insert(new Q.Goomba());
-           stage.viewport.scale = 1.5;
+          // stage.viewport.scale = 1.5;
            // stage.insert(new Q.Goomba({x: 800}));
             stage.insert(new Q.Bloopa());
 
