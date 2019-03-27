@@ -99,7 +99,8 @@ var game = function () {
                 this.on("bump.top", function (collision) {
                     if (collision.obj.isA("Player")) {
                         this.destroy();
-                        collision.obj.p.vy = -300;
+                        // -300
+                        collision.obj.p.vy = -400;
                     }
                 });
             }
