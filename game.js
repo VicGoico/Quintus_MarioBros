@@ -48,10 +48,11 @@ var game = function () {
                 // hit.sprite is called everytime the player collides with a sprite
             },
             step: function (dt) {
-                if(this.p.y > 550){
+                if(this.p.y > 700){
+                    Q.stageScene("endGame", 1, { label: "You Died" });
                     console.log("cayendo");
-                    this.p.x = 410;
-                    this.p.y = 90;
+                    this.p.x = 300;
+                    this.p.y = 500;
                 }
                 //Futura animacion de mario
                 /*
@@ -134,12 +135,27 @@ var game = function () {
            // stage.insert(new Q.Goomba({x: 800}));
             stage.insert(new Q.Bloopa());
 
-            //stage.insert(new Q.Goomba());
+            stage.insert(new Q.Goomba());
             
-           // stage.insert(new Q.Goomba({x: 800}));
+            stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("level1");
         });
+        Q.scene('endGame',function(stage) {
+            var box = stage.insert(new Q.UI.Container({
+              x: Q.width/2, y: Q.height/2, fill: "rgba(1,0,0,0.5)"
+            }));
+            
+            var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
+                                                     label: "Play Again" }))         
+            var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, 
+                                                  label: stage.options.label }));
+            button.on("click",function() {
+              Q.clearStages();
+              Q.stageScene('level1');
+            });
+            box.fit(20);
+          });
     });
 }
