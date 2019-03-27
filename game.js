@@ -83,6 +83,7 @@ var game = function () {
             stage.add("viewport").follow(player);
             stage.insert(new Q.Goomba());
             //stage.viewport.scale = 1.5;
+            stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("level1");
