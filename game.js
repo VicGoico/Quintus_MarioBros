@@ -195,9 +195,11 @@ var game = function () {
                 sheet: "bloopa",
                 x: 600,
                 y: 400,
-                vx: 30,
+                vx: 0,
+                vy: 70,
                 frame: 0
             });
+            this.p.gravityY = 0;
             this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
             //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
             this.on("bump.left,bump.right,bump.bottom, bump.top", function (collision) {
@@ -214,7 +216,18 @@ var game = function () {
                     collision.obj.p.vy = -300;
                 }
             });
+        },
+        step: function (dt) {
+            if(this.p.y > 550){
+                this.p.vy = -70;
+            }
+            else if(this.p.y < 400){
+                this.p.vy = 70;
+            }
+
+            
         }
+
     });
     Q.Sprite.extend("Coin", {
         init: function(p){
