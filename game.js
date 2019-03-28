@@ -64,8 +64,8 @@ var game = function () {
             box.fit(20);
         });
         Q.animations('mario_small', {
-            run_right: { frames: [7, 6, 5, 4, 3, 2, 1], rate: 1 / 15 },
-            run_left: { frames: [19, 18, 17, 16, 15], rate: 1 / 15 },
+            run_right: { frames: [0,1,2,3], rate: 1 / 15 },
+            run_left: { frames: [14,15,16], rate: 1 / 15 },
             fire_right: {
                 frames: [9, 10, 10], next: 'stand_right', rate: 1 / 30,
                 trigger: "fired"
@@ -74,10 +74,14 @@ var game = function () {
                 frames: [20, 21, 21], next: 'stand_left', rate: 1 / 30,
                 trigger: "fired"
             },
-            stand_right: { frames: [8], rate: 1 / 5 },
-            stand_left: { frames: [20], rate: 1 / 5 },
+            stand_right: { frames: [0], rate: 1 / 5 },
+            stand_left: { frames: [14], rate: 1 / 5 },
             fall_right: { frames: [2], loop: false },
-            fall_left: { frames: [14], loop: false }
+            fall_left: { frames: [14], loop: false },
+            run_up_right: {frames: [4], rate: 1 / 15},
+            run_up_left: {frames: [18], rate: 1 / 15},
+            run_down_right:  {frames: [6,7], rate: 1 / 15},
+            run_down_left : {frames: [20,21], rate: 1 / 15}
         });
 
     });
@@ -111,15 +115,29 @@ var game = function () {
                 this.p.x = 300;
                 this.p.y = 500;
             }
-            //Futura animacion de mario
-            /*
-            if (this.p.vx > 0) {
-                this.play("run_right");
-            } else if (this.p.vx < 0) {
-                this.play("run_left");
-            } else {
-                this.play("stand_" + this.p.direction);
-            }*/
+            else {
+                if (this.p.vx > 0) {
+                    this.play("run_right");
+                } else if (this.p.vx < 0) {
+                    this.play("run_left");
+                } else {
+                    this.play("stand_" + this.p.direction);
+                }
+                if(this.p.vy > 0){
+                    if(this.p.vx > 0)
+                    this.play("run_down_right");
+                    else
+                    this.play("run_down_left");
+                }
+                else if(this.p.vy < 0){
+                    if(this.p.vx > 0)
+                    this.play("run_up_right");
+                    else
+                    this.play("run_up_left");
+                    
+                }
+            }
+
 
         }
 
