@@ -132,7 +132,7 @@ var game = function () {
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
            // stage.insert(new Q.Goomba());
-          // stage.viewport.scale = 1.5;
+          	stage.viewport.scale = 1.5;
            // stage.insert(new Q.Goomba({x: 800}));
             stage.insert(new Q.Bloopa());
 
