@@ -17,7 +17,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
-    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png", function () {
+    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -27,6 +27,7 @@ var game = function () {
         //Sprite de Goomba
         Q.compileSheets("goomba.png", "goomba.json");
         Q.compileSheets("bloopa.png", "bloopa.json");
+        Q.compileSheets("coin.png", "coin.json");
         //Se carga el nivel 1 tmx y se añaden los objetos
         Q.scene("level1", function (stage) {
             Q.stageTMX("level.tmx", stage);
@@ -36,6 +37,7 @@ var game = function () {
             stage.viewport.scale = 1.5;
             // stage.insert(new Q.Goomba({x: 800}));
             stage.insert(new Q.Bloopa());
+            stage.insert(new Q.Coin());
 
             stage.insert(new Q.Goomba());
 
@@ -83,6 +85,9 @@ var game = function () {
             run_down_right:  {frames: [6,7], rate: 1 / 15},
             run_down_left : {frames: [20,21], rate: 1 / 15}
         });
+        Q.animations('coin_animation', {
+            
+        })
 
     });
     Q.Sprite.extend("Player", {
@@ -179,7 +184,7 @@ var game = function () {
             });
             this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
             //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
-            this.on("bump.left,bump.right,bump.bottom", function (collision) {
+            this.on("bump.left,bump.right,bump.bottom, bump.top", function (collision) {
                 if (collision.obj.isA("Player")) {
                     Q.stageScene("endGame", 1, { label: "You Died" });
                     collision.obj.destroy();
@@ -194,5 +199,29 @@ var game = function () {
                 }
             });
         }
+    });
+    Q.Sprite.extend("Coin", {
+        init: function(p){
+            this._super(p, {
+                sheet: "coin",
+                x: 400,
+                y: 390,
+                frame: 0
+            });
+            this.p.gravityY = 0;
+            this.add('2d, tween'); //Para la IA que lo mueve de derecha a izquierda
+            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+            this.on("bump.left,bump.right,bump.bottom,bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    this.animate({ x: this.p.x, y: this.p.y - 50, angle: 0 }, 0.25,{callback: function(){
+                        this.destroy();
+                    }
+                });
+                    
+
+                }
+            });
+        }
+
     });
 }
