@@ -17,7 +17,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
-    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json", function () {
+    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -29,6 +29,21 @@ var game = function () {
         Q.compileSheets("bloopa.png", "bloopa.json");
         Q.compileSheets("coin.png", "coin.json");
         //Se carga el nivel 1 tmx y se añaden los objetos
+        Q.scene('mainMenu', function (stage) {
+            var box = stage.insert(new Q.UI.Container({
+                x: Q.width / 2, y: Q.height / 2, fill: "rgba(1,0,0,0.5)"
+            }));
+
+            var button = box.insert(new Q.UI.Button({
+                asset: 'mainTitle.png',
+                label: ""
+            }))
+            button.on("click", function () {
+                Q.clearStages();
+                Q.stageScene('level1');
+            });
+            box.fit(20);
+        });
         Q.scene("level1", function (stage) {
             Q.stageTMX("level.tmx", stage);
             var player = stage.insert(new Q.Player());
@@ -44,7 +59,7 @@ var game = function () {
             stage.insert(new Q.Goomba({ x: 800 }));
         });
         Q.loadTMX("level.tmx", function () {
-            Q.stageScene("level1");
+            Q.stageScene("mainMenu");
         });
         Q.scene('endGame', function (stage) {
             var box = stage.insert(new Q.UI.Container({
@@ -65,6 +80,7 @@ var game = function () {
             });
             box.fit(20);
         });
+        
         Q.animations('mario_small', {
             run_right: { frames: [0,1,2,3], rate: 1 / 15 },
             run_left: { frames: [14,15,16], rate: 1 / 15 },
