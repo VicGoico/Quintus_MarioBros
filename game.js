@@ -17,7 +17,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
-    Q.load("mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, princess.png, princess.json, tiles.png", function () {
+    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -157,20 +157,44 @@ var game = function () {
         Q.scene("ventanaPrincipal", function(stage){
             Q.stageScene("mainTitle.png",stage);
         });
+        Q.compileSheets("coin.png", "coin.json");
         //Se carga el nivel 1 tmx y se añaden los objetos
+        Q.scene('mainMenu', function (stage) {
+            var box = stage.insert(new Q.UI.Container({
+                x: Q.width / 2, y: Q.height / 2, fill: "rgba(1,0,0,0.5)"
+            }));
+
+            var button = box.insert(new Q.UI.Button({
+                asset: 'mainTitle.png',
+                label: ""
+            }))
+            button.on("click", function () {
+                Q.clearStages();
+                Q.stageScene('level1');
+            });
+            box.fit(20);
+        });
         Q.scene("level1", function (stage) {
             Q.stageTMX("level.tmx", stage);
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
           	stage.viewport.scale = 1.5;
            // stage.insert(new Q.Bloopa());
+            // stage.insert(new Q.Goomba());
+            stage.viewport.scale = 1.5;
+            // stage.insert(new Q.Goomba({x: 800}));
+            stage.insert(new Q.Bloopa());
+            stage.insert(new Q.Coin());
+
+            stage.insert(new Q.Goomba());
+
 
            // stage.insert(new Q.Goomba());
             stage.insert(new Q.Princess());
            // stage.insert(new Q.Goomba({x: 800}));
         });
         Q.loadTMX("level.tmx", function () {
-            Q.stageScene("level1");
+            Q.stageScene("mainMenu");
         });
         Q.scene('endGame',function(stage) {
             var box = stage.insert(new Q.UI.Container({
@@ -186,6 +210,165 @@ var game = function () {
               Q.stageScene('level1');
             });
             box.fit(20);
-          });
+        });
+        
+        Q.animations('mario_small', {
+            run_right: { frames: [0,1,2,3], rate: 1 / 15 },
+            run_left: { frames: [14,15,16], rate: 1 / 15 },
+            fire_right: {
+                frames: [9, 10, 10], next: 'stand_right', rate: 1 / 30,
+                trigger: "fired"
+            },
+            fire_left: {
+                frames: [20, 21, 21], next: 'stand_left', rate: 1 / 30,
+                trigger: "fired"
+            },
+            stand_right: { frames: [0], rate: 1 / 5 },
+            stand_left: { frames: [14], rate: 1 / 5 },
+            fall_right: { frames: [2], loop: false },
+            fall_left: { frames: [14], loop: false },
+            run_up_right: {frames: [4], rate: 1 / 15},
+            run_up_left: {frames: [18], rate: 1 / 15},
+            run_down_right:  {frames: [6,7], rate: 1 / 15},
+            run_down_left : {frames: [20,21], rate: 1 / 15}
+        });
+        Q.animations('coin_animation', {
+            
+        })
+
+    });
+    Q.Sprite.extend("Player", {
+        // the init constructor is called on creation
+        init: function (p) {
+            // You can call the parent's constructor with this._super(..)
+            this._super(p, {
+                sprite: "mario_small",
+                sheet: "marioR", // Sprite que esta dentro de mario_small.json
+                x: 300, //x donde aparecerá
+                jumpSpeed: -400,
+                y: 500 //y donde aparecerá
+            });
+            // Add in pre-made components to get up and running quickly
+            // The `2d` component adds in default 2d collision detection
+            // and kinetics (velocity, gravity)
+            // The `platformerControls` makes the player controllable by the
+            // default input actions (left, right to move, up or action to jump)
+            // It also checks to make sure the player is on a horizontal surface before
+            // letting them jump.
+            this.add('2d, platformerControls, tween, animation');
+            //this.on("bump.bottom",this,"stomp");
+            // Write event handlers to respond hook into behaviors.
+            // hit.sprite is called everytime the player collides with a sprite
+        },
+        step: function (dt) {
+            if (this.p.y > 700) {
+                Q.stageScene("endGame", 1, { label: "You Died" });
+                console.log("cayendo");
+                this.p.x = 300;
+                this.p.y = 500;
+            }
+            else {
+                if (this.p.vx > 0) {
+                    this.play("run_right");
+                } else if (this.p.vx < 0) {
+                    this.play("run_left");
+                } else {
+                    this.play("stand_" + this.p.direction);
+                }
+                if(this.p.vy > 0){
+                    if(this.p.vx > 0)
+                    this.play("run_down_right");
+                    else
+                    this.play("run_down_left");
+                }
+                else if(this.p.vy < 0){
+                    if(this.p.vx > 0)
+                    this.play("run_up_right");
+                    else
+                    this.play("run_up_left");
+                    
+                }
+            }
+
+
+        }
+
+
+    });
+    Q.Sprite.extend("Goomba", {
+        init: function (p) {
+            this._super(p, {
+                sheet: "goomba",
+                x: 500,
+                y: 530,
+                vx: 100
+            });
+            this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
+            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+            this.on("bump.left,bump.right,bump.bottom", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    Q.stageScene("endGame", 1, { label: "You Died" });
+                    collision.obj.destroy();
+                }
+            });
+            //Si le salta encima el player lo mata y salta más
+            this.on("bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    this.destroy();
+                    collision.obj.p.vy = -300;
+                }
+            });
+        }
+    });
+    Q.Sprite.extend("Bloopa", {
+        init: function (p) {
+            this._super(p, {
+                sheet: "bloopa",
+                x: 600,
+                y: 400,
+                vx: 30,
+                frame: 0
+            });
+            this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
+            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+            this.on("bump.left,bump.right,bump.bottom, bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    Q.stageScene("endGame", 1, { label: "You Died" });
+                    collision.obj.destroy();
+                }
+            });
+            //Si le salta encima el player lo mata y salta más
+            this.on("bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    this.destroy();
+                    // -300
+                    collision.obj.p.vy = -300;
+                }
+            });
+        }
+    });
+    Q.Sprite.extend("Coin", {
+        init: function(p){
+            this._super(p, {
+                sheet: "coin",
+                x: 400,
+                y: 390,
+                frame: 0
+            });
+            this.p.gravityY = 0;
+            this.add('2d, tween'); //Para la IA que lo mueve de derecha a izquierda
+            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+            this.on("bump.left,bump.right,bump.bottom,bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    this.animate({ x: this.p.x, y: this.p.y - 50, angle: 0 }, 0.25,{callback: function(){
+                        this.destroy();
+                    }
+                });
+                    
+
+                }
+            });
+        }
+
     });
 }
