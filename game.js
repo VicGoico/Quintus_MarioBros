@@ -68,7 +68,9 @@ var game = function () {
             Q.stageTMX("level.tmx", stage);
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
-            stage.insert(new Q.Bloopa({x:3100}));
+            stage.insert(new Q.Bloopa({x:2850}));
+            stage.insert(new Q.Bloopa({x:3100, vy: 80, y: 300}));
+            stage.insert(new Q.Bloopa({x:2600, vy: 100, y: 500, miny: 300, maxy: 450}));
             stage.insert(new Q.Coin());
             stage.insert(new Q.Goomba());
             stage.insert(new Q.Princess());
@@ -140,7 +142,7 @@ var game = function () {
             this.on("bump.top", function (collision) {
                 if (collision.obj.isA("Player")) {
                     this.destroy();
-                    collision.obj.p.vy = -300;
+                    collision.obj.p.vy = -500;
                 }
             });
         }
@@ -215,6 +217,8 @@ var game = function () {
                 y: 400,
                 vx: 0,
                 vy: 70,
+                maxy: 550,
+                miny: 350,
                 frame: 0
             });
             this.p.gravityY = 0;
@@ -226,20 +230,12 @@ var game = function () {
                     collision.obj.destroy();
                 }
             });
-            //Si le salta encima el player lo mata y salta más
-            this.on("bump.top", function (collision) {
-                if (collision.obj.isA("Player")) {
-                    this.destroy();
-                    // -300
-                    collision.obj.p.vy = -300;
-                }
-            });
         },
         step: function (dt) {
-            if(this.p.y > 550){
+            if(this.p.y > this.p.maxy){
                 this.p.vy = -70;
             }
-            else if(this.p.y < 400){
+            else if(this.p.y < this.p.miny){
                 this.p.vy = 70;
             }
 
