@@ -115,6 +115,10 @@ var game = function () {
             run_down_right:  {frames: [6,7], rate: 1 / 15},
             run_down_left : {frames: [20,21], rate: 1 / 15}
         });
+        Q.animations('goomba_animation', {
+            run_right: { frames: [0,1], rate: 1 / 5 },
+            run_left: { frames: [0,1], rate: 1 / 5 }
+        })
         Q.animations('coin_animation', {
             
         })
@@ -125,12 +129,13 @@ var game = function () {
 	Q.Sprite.extend("Goomba", {
         init: function (p) {
 	        this._super(p, {
+                sprite: "goomba_animation",
 	            sheet: "goomba",
 	            x: 500,
 	            y: 530,
 	            vx: 100
 	        });
-            this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
+            this.add('2d, aiBounce, tween, animation'); //Para la IA que lo mueve de derecha a izquierda
             //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
             this.on("bump.left,bump.right,bump.bottom", function (collision) {
                 if (collision.obj.isA("Player")) {
@@ -145,7 +150,25 @@ var game = function () {
                     collision.obj.p.vy = -500;
                 }
             });
+        },
+        step: function (dt) {
+            if (this.p.y > 700) {
+                Q.stageScene("endGame", 1, { label: "You Died" });
+                console.log("cayendo");
+                this.p.x = 300;
+                this.p.y = 500;
+            }
+            else {
+                if (this.p.vx > 0) {
+                    this.play("run_right");
+                } else if (this.p.vx < 0) {
+                    this.play("run_left");
+                } else {
+                    this.play("stand_" + this.p.direction);
+                }
+            }
         }
+
 	});
 
 	//Mario
