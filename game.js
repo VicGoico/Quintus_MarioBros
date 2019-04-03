@@ -17,7 +17,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
-    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json", function () {
+    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.gif, bowser.json", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -71,6 +71,9 @@ var game = function () {
             stage.insert(new Q.Bloopa({x:2850}));
             stage.insert(new Q.Bloopa({x:3100, vy: 80, y: 300}));
             stage.insert(new Q.Bloopa({x:2600, vy: 100, y: 500, miny: 300, maxy: 450}));
+            stage.insert(new Q.Bloopa({x:2400, vy: 200, y: 500, miny: 300, maxy: 500}));
+            stage.insert(new Q.Bloopa({x:2190, vy: 300, y: 500, miny: 350, maxy: 550}));
+            stage.insert(new Q.Bloopa({x:3300, vy: 150, y: 350}));
             stage.insert(new Q.Coin());
             stage.insert(new Q.Goomba());
             stage.insert(new Q.Princess());
