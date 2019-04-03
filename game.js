@@ -17,7 +17,7 @@ var game = function () {
         // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
-    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.gif, bowser.json", function () {
+    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.png, bowser.json, fire.gif, fire.json", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -29,6 +29,8 @@ var game = function () {
         Q.compileSheets("coin.png", "coin.json");
         Q.compileSheets("goomba.png", "goomba.json");
         Q.compileSheets("bloopa.png", "bloopa.json");
+        Q.compileSheets("bowser.png", "bowser.json");
+        Q.compileSheets("fire.gif", "fire.json");
         Q.Sprite.extend("Princess", {
             init: function (p) {
                 this._super(p, {
@@ -76,9 +78,11 @@ var game = function () {
             stage.insert(new Q.Bloopa({x:3300, vy: 150, y: 350}));
             stage.insert(new Q.Coin());
             stage.insert(new Q.Goomba());
+            stage.insert(new Q.Bowser());
             stage.insert(new Q.Princess());
             stage.insert(new Q.Goomba({ x: 800 }));
         });
+
         Q.loadTMX("level.tmx", function () {
             Q.stageScene("mainMenu");
         });
@@ -101,6 +105,8 @@ var game = function () {
             });
             box.fit(20);
         });
+
+
 
         Q.animations('mario_small', {
             run_right: { frames: [0, 1, 2, 3], rate: 1 / 15 },
@@ -291,7 +297,7 @@ var game = function () {
         init: function (p) {
             this._super(p, {
                 sheet: "coin",
-                x: 400,
+                x: 1000,
                 y: 390,
                 frame: 0
             });
@@ -311,5 +317,25 @@ var game = function () {
             });
         }
 
+    });
+
+     Q.Sprite.extend("Bowser", {
+        init: function (p) {
+            this._super(p, {
+                sheet: "bowser",
+                x: 1500,
+                y: 390,
+                vx: 100, 
+                tiempo: 0
+            });
+            this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
+            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+            this.on("bump.left,bump.right,bump.bottom,bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    Q.stageScene("endGame", 1, { label: "You Died" });
+                    collision.obj.destroy();
+                }
+            });
+        }
     });
 }
