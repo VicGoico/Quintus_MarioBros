@@ -101,7 +101,7 @@ var game = function () {
             }));
             button.on("click", function () {
                 Q.clearStages();
-                Q.stageScene('level1');
+                Q.stageScene('mainMenu');
             });
             box.fit(20);
         });
