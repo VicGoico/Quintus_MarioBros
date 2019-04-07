@@ -136,28 +136,7 @@ var game = function () {
                 vx: 100,
                 muerte: false
             });
-            this.add('2d, aiBounce, animation'); //Para la IA que lo mueve de derecha a izquierda
-            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
-            this.on("bump.left,bump.right,bump.bottom", function (collision) {
-                if (collision.obj.isA("Player")) {
-                    Q.stageScene("endGame", 1, { label: "You Died" });
-                    collision.obj.destroy();
-                }
-            });
-            //Si le salta encima el player lo mata y salta más
-            this.on("bump.top", function (collision) {
-                if (collision.obj.isA("Player")) {
-                    console.log("die");
-                    this.p.muerte = true;
-                    this.play("die");
-                    collision.obj.p.vy = -500;
-
-                }
-            });
-            this.on("die", function(){
-                this.destroy();
-            });
-            
+            this.add('2d, aiBounce, animation, defaultEnemy'); //Para la IA que lo mueve de derecha a izquierda            
         },
         step: function (dt) {
             if (this.p.y > 700) {
@@ -166,13 +145,8 @@ var game = function () {
                 this.p.y = 500;
             }
             else if(!this.p.muerte) {
-                if (this.p.vx > 0) {
-                    this.play("run_right");
-                } else if (this.p.vx < 0) {
-                    this.play("run_left");
-                } else {
-                    //this.play("stand_" + this.p.direction);
-                }
+                if (this.p.vx > 0) this.play("run_right");
+                else if (this.p.vx < 0) this.play("run_left");
             }
         }
     });
@@ -206,17 +180,10 @@ var game = function () {
                     this.play("stand_" + this.p.direction);
                 }
                 if (this.p.vy > 0) {
-                    if (this.p.vx > 0)
-                        this.play("run_down_right");
-                    else
-                        this.play("run_down_left");
+                    this.play("run_down_" + this.p.direction);
                 }
                 else if (this.p.vy < 0) {
-                    if (this.p.vx > 0)
-                        this.play("run_up_right");
-                    else
-                        this.play("run_up_left");
-
+                    this.play("run_up_" + this.p.direction);
                 }
             }
         }
@@ -235,14 +202,7 @@ var game = function () {
                 frame: 0
             });
             this.p.gravityY = 0;
-            this.add('2d, aiBounce'); //Para la IA que lo mueve de derecha a izquierda
-            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
-            this.on("bump.left,bump.right,bump.bottom, bump.top", function (collision) {
-                if (collision.obj.isA("Player")) {
-                    Q.stageScene("endGame", 1, { label: "You Died" });
-                    collision.obj.destroy();
-                }
-            });
+            this.add('2d, aiBounce, defaultEnemy'); //Para la IA que lo mueve de derecha a izquierda
         },
         step: function (dt) {
             if (this.p.y > this.p.maxy) {
@@ -251,10 +211,7 @@ var game = function () {
             else if (this.p.y < this.p.miny) {
                 this.p.vy = 70;
             }
-
-
         }
-
     });
 
     //Moneda
@@ -300,6 +257,30 @@ var game = function () {
                     Q.stageScene("endGame", 1, { label: "You Died" });
                     collision.obj.destroy();
                 }
+            });
+        }
+    });
+    Q.component("defaultEnemy", {
+        added: function(){
+            //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
+            this.entity.on("bump.left,bump.right,bump.bottom", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    Q.stageScene("endGame", 1, { label: "You Died" });
+                    collision.obj.destroy();
+                }
+            });
+            //Si le salta encima el player lo mata y salta más
+            this.entity.on("bump.top", function (collision) {
+                if (collision.obj.isA("Player")) {
+                    console.log("die");
+                    this.p.muerte = true;
+                    this.play("die");
+                    collision.obj.p.vy = -500;
+
+                }
+            });
+            this.entity.on("die", function(){
+                this.destroy();
             });
         }
     });
