@@ -181,6 +181,8 @@ var game = function () {
         },
         step: function (dt) {
             if (this.p.y > 700) {
+                Q.audio.stop('music_main.mp3');
+                Q.audio.play("music_die.mp3");
                 Q.stageScene("endGame", 1, { label: "You Died" });
                 console.log("cayendo");
                 this.p.x = 300;
