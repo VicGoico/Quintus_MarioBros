@@ -1,8 +1,8 @@
 var game = function () {
     //Función a la que se llamará cuando se cargue el juego
     //Objeto Quinus con los modulos que necesitamos
-    var Q = window.Q = Quintus()
-        .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX")
+    var Q = window.Q = Quintus({ audioSupported: [ 'mp3' ] })
+        .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX, Audio")
         // Maximize this game to whatever the size of the browser is
         .setup({
             maximize: true,
@@ -15,8 +15,9 @@ var game = function () {
             downsampleHeight: 768 // is larger than or equal to 1024x768 
         })
         .controls().touch()
+        .enableSound();
     //Se cargan los recursos
-    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.png, bowser.json, fire.gif, fire.json", function () {
+    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.png, bowser.json, fire.gif, fire.json, coin.mp3", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -244,6 +245,7 @@ var game = function () {
                     this.animate({ x: this.p.x, y: this.p.y - 50, angle: 0 }, 0.25, {
                         callback: function () {
                             Q.state.inc("totalMonedas", 1);
+                            Q.audio.play('coin.mp3');
                             this.destroy();
                         }
                     });
