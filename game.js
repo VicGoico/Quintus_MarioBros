@@ -17,7 +17,7 @@ var game = function () {
         .controls().touch()
         .enableSound();
     //Se cargan los recursos
-    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.png, bowser.json, fire.gif, fire.json, coin.mp3", function () {
+    Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.png, bowser.json, fire.gif, fire.json, coin.mp3, music_die.mp3, music_main.mp3", function () {
         Q.sheet("tiles", "tiles.png", {
             tilew: 32,
             tileh: 32
@@ -86,6 +86,7 @@ var game = function () {
             stage.insert(new Q.Bowser());
             stage.insert(new Q.Princess());
             stage.insert(new Q.Goomba({ x: 800 }));
+            Q.audio.play("music_main.mp3");
         });
 
         Q.loadTMX("level.tmx", function () {
@@ -281,6 +282,8 @@ var game = function () {
             //Si le tocan por la izquierda, derecha o por debajo y es el player, pierde
             this.entity.on("bump.left,bump.right,bump.bottom", function (collision) {
                 if (collision.obj.isA("Player")) {
+                    Q.audio.stop('music_main.mp3');
+                    Q.audio.play("music_die.mp3");
                     Q.stageScene("endGame", 1, { label: "You Died" });
                     collision.obj.destroy();
                 }
