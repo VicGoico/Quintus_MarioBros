@@ -77,6 +77,10 @@ var game = function () {
             stage.insert(new Q.Bloopa({x:2190, vy: 300, y: 500, miny: 350, maxy: 550}));
             stage.insert(new Q.Bloopa({x:3300, vy: 150, y: 350}));
             stage.insert(new Q.Coin());
+            stage.insert(new Q.Coin({x:500, y: 450}));
+            stage.insert(new Q.Coin({x:510, y: 450}));
+            stage.insert(new Q.Coin({x:520, y: 450}));
+            stage.insert(new Q.Coin({x:530, y: 450}));
             stage.insert(new Q.Goomba());
             stage.insert(new Q.Bowser());
             stage.insert(new Q.Princess());
