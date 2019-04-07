@@ -14,7 +14,6 @@ var game = function () {
             downsampleWidth: 1024, // Halve the pixel density if resolution
             downsampleHeight: 768 // is larger than or equal to 1024x768 
         })
-        // And turn on default input controls and touch input (for UI)
         .controls().touch()
     //Se cargan los recursos
     Q.load("mainTitle.png, mario_small.png, mario_small.json, goomba.png, goomba.json,bloopa.png, bloopa.json, tiles.png, coin.png, coin.json, princess.png, princess.json, bowser.png, bowser.json, fire.gif, fire.json", function () {
@@ -22,8 +21,6 @@ var game = function () {
             tilew: 32,
             tileh: 32
         });
-
-        //Sprite de Mario
         Q.compileSheets("mario_small.png", "mario_small.json");
         Q.compileSheets("princess.png", "princess.json");
         Q.compileSheets("coin.png", "coin.json");
@@ -105,20 +102,9 @@ var game = function () {
             });
             box.fit(20);
         });
-
-
-
         Q.animations('mario_small', {
             run_right: { frames: [0, 1, 2, 3], rate: 1 / 15 },
             run_left: { frames: [14, 15, 16], rate: 1 / 15 },
-            fire_right: {
-                frames: [9, 10, 10], next: 'stand_right', rate: 1 / 30,
-                trigger: "fired"
-            },
-            fire_left: {
-                frames: [20, 21, 21], next: 'stand_left', rate: 1 / 30,
-                trigger: "fired"
-            },
             stand_right: { frames: [0], rate: 1 / 5 },
             stand_left: { frames: [14], rate: 1 / 5 },
             fall_right: { frames: [2], loop: false },
@@ -136,10 +122,9 @@ var game = function () {
         });
         Q.animations('coin_animation', {
 
-        })
+        });
 
     });
-
     //Sprite de Goomba
     Q.Sprite.extend("Goomba", {
         init: function (p) {
@@ -159,7 +144,6 @@ var game = function () {
                     collision.obj.destroy();
                 }
             });
-            
             //Si le salta encima el player lo mata y salta más
             this.on("bump.top", function (collision) {
                 if (collision.obj.isA("Player")) {
@@ -175,11 +159,9 @@ var game = function () {
             });
             
         },
-        
         step: function (dt) {
             if (this.p.y > 700) {
                 Q.stageScene("endGame", 1, { label: "You Died" });
-                console.log("cayendo");
                 this.p.x = 300;
                 this.p.y = 500;
             }
@@ -193,9 +175,7 @@ var game = function () {
                 }
             }
         }
-
     });
-
     //Mario
     Q.Sprite.extend("Player", {
         // the init constructor is called on creation
@@ -208,17 +188,7 @@ var game = function () {
                 jumpSpeed: -400,
                 y: 500 //y donde aparecerá
             });
-            // Add in pre-made components to get up and running quickly
-            // The `2d` component adds in default 2d collision detection
-            // and kinetics (velocity, gravity)
-            // The `platformerControls` makes the player controllable by the
-            // default input actions (left, right to move, up or action to jump)
-            // It also checks to make sure the player is on a horizontal surface before
-            // letting them jump.
             this.add('2d, platformerControls, tween, animation');
-            //this.on("bump.bottom",this,"stomp");
-            // Write event handlers to respond hook into behaviors.
-            // hit.sprite is called everytime the player collides with a sprite
         },
         step: function (dt) {
             if (this.p.y > 700) {
@@ -249,13 +219,8 @@ var game = function () {
 
                 }
             }
-
-
         }
-
-
     });
-
     //Bloopa
     Q.Sprite.extend("Bloopa", {
         init: function (p) {
