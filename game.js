@@ -60,10 +60,13 @@ var game = function () {
             button.on("click", function () {
                 Q.clearStages();
                 Q.stageScene('level1');
+                Q.stageScene("sumaMonedas",1);
             });
+            
             box.fit(20);
         });
         Q.scene("level1", function (stage) {
+            Q.state.reset({totalMonedas: 0});
             Q.stageTMX("level.tmx", stage);
             var player = stage.insert(new Q.Player());
             stage.add("viewport").follow(player);
@@ -101,6 +104,12 @@ var game = function () {
                 Q.stageScene('level1');
             });
             box.fit(20);
+        });
+        Q.scene("sumaMonedas", function(stage) {
+            var label = stage.insert(new Q.UI.Text({ x: Q.width/2, y: 50, label: "Coins: 0" }));
+            Q.state.on("change.totalMonedas", this, function( coin ) {
+                label.p.label = "Coins: " + coin;
+            });	
         });
         Q.animations('mario_small', {
             run_right: { frames: [0, 1, 2, 3], rate: 1 / 15 },
@@ -230,6 +239,7 @@ var game = function () {
                 if (collision.obj.isA("Player")) {
                     this.animate({ x: this.p.x, y: this.p.y - 50, angle: 0 }, 0.25, {
                         callback: function () {
+                            Q.state.inc("totalMonedas", 1);
                             this.destroy();
                         }
                     });
