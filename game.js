@@ -135,9 +135,10 @@ var game = function () {
             run_left: { frames: [0, 1], rate: 1 / 5 }
 
         });
-        Q.animations('coin_animation', {
-
+        Q.animations('bloopa_animation', {
+            die: { frames: [2], loop: false, rate: 1/15, trigger: "die" }
         });
+
 
     });
     //Sprite de Goomba
@@ -210,6 +211,7 @@ var game = function () {
         init: function (p) {
             this._super(p, {
                 sheet: "bloopa",
+                sprite: "bloopa_animation",
                 x: 600,
                 y: 400,
                 vx: 0,
@@ -219,7 +221,7 @@ var game = function () {
                 frame: 0
             });
             this.p.gravityY = 0;
-            this.add('2d, aiBounce, defaultEnemy'); //Para la IA que lo mueve de derecha a izquierda
+            this.add('2d, aiBounce, defaultEnemy, animation'); //Para la IA que lo mueve de derecha a izquierda
         },
         step: function (dt) {
             if (this.p.y > this.p.maxy) {
