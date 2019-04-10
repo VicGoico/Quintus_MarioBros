@@ -306,7 +306,6 @@ var game = function () {
             this.entity.on("bump.top", function (collision) {
                 if (collision.obj.isA("Player")) {
                     console.log("die");
-                    Q.audio.stop('music_main.mp3');
                     this.p.muerte = true;
                     this.play("die");
                     collision.obj.p.vy = -500;
