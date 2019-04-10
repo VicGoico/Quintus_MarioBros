@@ -63,7 +63,7 @@ var game = function () {
                 Q.stageScene('level1');
                 Q.stageScene("sumaMonedas",1);
             });
-            button.on("fire", function () {
+            Q.input.on("confirm", function(){
                 Q.clearStages();
                 Q.stageScene('level1');
                 Q.stageScene("sumaMonedas",1);
