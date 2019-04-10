@@ -63,6 +63,16 @@ var game = function () {
                 Q.stageScene('level1');
                 Q.stageScene("sumaMonedas",1);
             });
+            button.on("fire", function () {
+                Q.clearStages();
+                Q.stageScene('level1');
+                Q.stageScene("sumaMonedas",1);
+            });
+            Q.input.on("fire", function(){
+                Q.clearStages();
+                Q.stageScene('level1');
+                Q.stageScene("sumaMonedas",1);
+            });
             
             box.fit(20);
         });
